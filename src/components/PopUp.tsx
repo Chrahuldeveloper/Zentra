@@ -5,41 +5,47 @@ export default function PopUp() {
 
   const handleRecord = async () => {
     try {
-      const recordUserScreen = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-        audio: true,
+      chrome.tabCapture.capture({ audio: true, video: true }, (stream) => {
+        if (!stream) {
+          console.error("Failed to capture tab:", chrome.runtime.lastError);
+          return;
+        }
+
+        const options = { mimeType: "video/webm; codecs=vp9" };
+        const mimeType = MediaRecorder.isTypeSupported(options.mimeType)
+          ? options.mimeType
+          : "video/webm; codecs=vp8";
+
+        const recordedChunks: BlobPart[] = [];
+
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+          }
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: mimeType });
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "recording.webm";
+          a.click();
+        };
+
+        mediaRecorder.start();
+
+
+        setTimeout(() => {
+          mediaRecorder.stop();
+          stream.getTracks().forEach((track) => track.stop()); 
+        }, 5000);
+      
       });
 
-      const options = { mimeType: "video/webm; codecs=vp9" };
-
-      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
-        options.mimeType = "video/webm; codecs=vp8";
-      }
-
-      let media = new MediaRecorder(recordUserScreen, options);
-
-      let chunks: any = [];
-
-      media.ondataavailable = function (e) {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-        }
-      };
-
-      media.onstop = function () {
-        const blob = new Blob(chunks, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "recording.webm";
-        a.click();
-
-        chunks = [];
-      };
-
-      media.start();
-      console.log("recording....");
     } catch (error) {
       console.log(error);
     }

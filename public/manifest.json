@@ -1,0 +1,11 @@
+{
+    "name": "Zentra",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": ["tabCapture"],
+    "host_permissions": ["<all_urls>"],
+    "action": {
+      "default_popup": "index.html"
+    }
+  }
+  
