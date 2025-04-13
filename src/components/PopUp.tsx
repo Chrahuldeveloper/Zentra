@@ -1,10 +1,14 @@
 import Switch from "@mui/material/Switch";
+import { useState } from "react";
 
 export default function PopUp() {
   const label = { inputProps: { "aria-label": "Switch demo" } };
 
+  const [toggle, settoggle] = useState<boolean>();
+
   const handleRecord = async () => {
     try {
+      settoggle(true);
       chrome.tabCapture.capture({ audio: true, video: true }, (stream) => {
         if (!stream) {
           console.error("Failed to capture tab:", chrome.runtime.lastError);
@@ -60,12 +64,21 @@ export default function PopUp() {
           <p className="text-gray-500 font-semibold text-sm">
             Record your screen with smart zoom on clicks
           </p>
-          <button
-            onClick={handleRecord}
-            className="bg-blue-600 text-white text-center w-full py-3 rounded-lg font-semibold hover:bg-blue-700 ease-in-out duration-400 cursor-pointer"
-          >
-            Start Recording
-          </button>
+          {toggle ? (
+            <button
+              onClick={handleRecord}
+              className="bg-blue-600 text-white text-center w-full py-3 rounded-lg font-semibold hover:bg-blue-700 ease-in-out duration-400 cursor-pointer"
+            >
+              Start Recording
+            </button>
+          ) : (
+            <button
+              onClick={handleRecord}
+              className="bg-blue-600 text-white text-center w-full py-3 rounded-lg font-semibold hover:bg-blue-700 ease-in-out duration-400 cursor-pointer"
+            >
+              Start Recording
+            </button>
+          )}
         </div>
 
         <div className="space-y-1.5  my-5">
