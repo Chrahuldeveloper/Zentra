@@ -3,15 +3,60 @@ import Switch from "@mui/material/Switch";
 export default function PopUp() {
   const label = { inputProps: { "aria-label": "Switch demo" } };
 
+  const handleRecord = async () => {
+    try {
+      const recordUserScreen = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: true,
+      });
+
+      const options = { mimeType: "video/webm; codecs=vp9" };
+
+      if (!MediaRecorder.isTypeSupported(options.mimeType)) {
+        options.mimeType = "video/webm; codecs=vp8";
+      }
+
+      let media = new MediaRecorder(recordUserScreen, options);
+
+      let chunks: any = [];
+
+      media.ondataavailable = function (e) {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      };
+
+      media.onstop = function () {
+        const blob = new Blob(chunks, { type: "video/webm" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "recording.webm";
+        a.click();
+
+        chunks = [];
+      };
+
+      media.start();
+      console.log("recording....");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
-      <div className="bg-white shawdow-xl shawdow-gray-200 rounded-xl p-5 max-w-lg">
+      <div className="bg-white shawdow-2xl shawdow-gray-800 rounded-xl p-5 max-w-lg">
         <div className="space-y-4">
           <h1 className="text-2xl font-semibold">🌀Zentra</h1>
           <p className="text-gray-500 font-semibold text-sm">
             Record your screen with smart zoom on clicks
           </p>
-          <button className="bg-blue-600 text-white text-center w-full py-3 rounded-lg font-semibold hover:bg-blue-700 ease-in-out duration-400 cursor-pointer">
+          <button
+            onClick={handleRecord}
+            className="bg-blue-600 text-white text-center w-full py-3 rounded-lg font-semibold hover:bg-blue-700 ease-in-out duration-400 cursor-pointer"
+          >
             Start Recording
           </button>
         </div>
