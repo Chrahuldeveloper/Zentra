@@ -30,6 +30,10 @@ export default function PopUp() {
           const blob = new Blob(recordedChunks, { type: mimeType });
           const url = URL.createObjectURL(blob);
 
+          chrome.tabs.create({
+            url: `chrome-extension://${chrome.runtime.id}`,
+          });
+
           const a = document.createElement("a");
           a.href = url;
           a.download = "recording.webm";
@@ -38,14 +42,11 @@ export default function PopUp() {
 
         mediaRecorder.start();
 
-
         setTimeout(() => {
           mediaRecorder.stop();
-          stream.getTracks().forEach((track) => track.stop()); 
+          stream.getTracks().forEach((track) => track.stop());
         }, 5000);
-      
       });
-
     } catch (error) {
       console.log(error);
     }
