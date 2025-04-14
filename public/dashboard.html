@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
-</head>
-<body>
-    <h1>hello</h1>
-</body>
+  </head>
+  <body>
+    <nav class="p-7 border-b-[1px] border-gray-300">
+      <div class="px-10">
+        <h1 class="text-2xl font-semibold">🌀 Zentra</h1>
+      </div>
+    </nav>
+
+    <div>
+      <video
+        src=""
+        class="w-[70vw] mx-auto border-[1px] border-gray-700"
+      ></video>
+
+      <div class="w-[70vw] mx-auto mt-4 flex items-center gap-4">
+        <button id="playPauseBtn" class="p-2 bg-gray-200 rounded-full hover:bg-gray-300">
+        </button>
+
+        <input
+          type="range"
+          id="seekBar"
+          value="0"
+          min="0"
+          max="100"
+          step="1"
+          class="w-full h-2 rounded-lg bg-gray-300 appearance-none"
+        />
+      </div>
+    </div>
+  </body>
 </html>
