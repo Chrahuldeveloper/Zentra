@@ -35,7 +35,7 @@ export default function PopUp() {
           const url = URL.createObjectURL(blob);
 
           chrome.tabs.create({
-            url: `chrome-extension://${chrome.runtime.id}`,
+            url: `chrome-extension://${chrome.runtime.id}/dashboard.html`,
           });
 
           const a = document.createElement("a");
@@ -58,7 +58,7 @@ export default function PopUp() {
 
   return (
     <>
-      <div className="bg-white shawdow-2xl shawdow-gray-800 rounded-xl p-5 max-w-lg">
+      <div className="bg-white shawdow-2xl  shawdow-gray-800 rounded-xl p-5 w-[90vw]">
         <div className="space-y-4">
           <h1 className="text-2xl font-semibold">🌀Zentra</h1>
           <p className="text-gray-500 font-semibold text-sm">
